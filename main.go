@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/rebelnato/gosqllite3/db/connection"
 	"gopkg.in/yaml.v3"
 )
 
@@ -18,6 +19,8 @@ type Config struct {
 	DatabaseConfig Database `yaml:"dbConfig"`
 }
 
+var dbConfig Config
+
 func main() {
 	data, err := os.ReadFile("./db/config/config.yml")
 	if err != nil {
@@ -25,8 +28,13 @@ func main() {
 		return
 	}
 
-	// Parse YAML into struct
-	var dbConfig Config
+	db, err := connection.ConnectToSQLiteDB()
+	if err != nil {
+		fmt.Println("Error connecting to SQLite:", err)
+		return
+	}
+	defer db.Close()
+
 	err = yaml.Unmarshal(data, &dbConfig)
 	if err != nil {
 		fmt.Println("Error parsing YAML:", err)
@@ -36,4 +44,8 @@ func main() {
 	// Print parsed values
 	// fmt.Println("Database path:", dbConfig.DatabaseConfig.DbPath)
 	// fmt.Println("Database name:", dbConfig.DatabaseConfig.DbName)
+}
+
+func PassConfig() (dbName string, dbPath string) {
+	return dbConfig.DatabaseConfig.DbName, dbConfig.DatabaseConfig.DbPath
 }

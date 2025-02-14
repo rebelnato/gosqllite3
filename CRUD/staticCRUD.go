@@ -1,1 +1,1 @@
-package gosqllite3
+package main
