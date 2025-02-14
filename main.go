@@ -28,6 +28,14 @@ func main() {
 		return
 	}
 
+	err = yaml.Unmarshal(data, &dbConfig)
+	if err != nil {
+		fmt.Println("Error parsing YAML:", err)
+		return
+	}
+
+	connection.PassConfig(dbConfig.DatabaseConfig.DbName, dbConfig.DatabaseConfig.DbPath)
+
 	db, err := connection.ConnectToSQLiteDB()
 	if err != nil {
 		fmt.Println("Error connecting to SQLite:", err)
@@ -35,17 +43,7 @@ func main() {
 	}
 	defer db.Close()
 
-	err = yaml.Unmarshal(data, &dbConfig)
-	if err != nil {
-		fmt.Println("Error parsing YAML:", err)
-		return
-	}
-
 	// Print parsed values
 	// fmt.Println("Database path:", dbConfig.DatabaseConfig.DbPath)
 	// fmt.Println("Database name:", dbConfig.DatabaseConfig.DbName)
-}
-
-func PassConfig() (dbName string, dbPath string) {
-	return dbConfig.DatabaseConfig.DbName, dbConfig.DatabaseConfig.DbPath
 }

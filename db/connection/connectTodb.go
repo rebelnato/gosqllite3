@@ -5,15 +5,20 @@ import (
 	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/rebelnato/gosqllite3/main"
 )
 
 // setting db path
-var dbName, dbPath string = main.PassConfig()
+var dbName, dbPath string
+
+func PassConfig(databaseName string, databasePath string) {
+	dbPath = databasePath
+	dbName = databaseName
+}
 
 func ConnectToSQLiteDB() (*sql.DB, error) {
+	// setting db path
 
-	db, err := sql.Open("sqlite3", "./db/mydb.db")
+	db, err := sql.Open("sqlite3", dbPath+"/"+dbName)
 	if err != nil {
 		return nil, err
 	}
