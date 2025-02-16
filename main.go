@@ -23,7 +23,7 @@ type Config struct {
 
 var dbConfig Config
 
-func main() {
+func initiateFlows() {
 	data, err := os.ReadFile("./db/config/config.yml")
 	if err != nil {
 		fmt.Println("Error reading YAML file:", err)
