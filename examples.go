@@ -141,7 +141,7 @@ func initiateExampleTest(db *sql.DB) {
 
 	case "exit":
 		fmt.Println("Exiting script based on user input")
-		return
+		break
 	default:
 		fmt.Println("Provided input is invalid reinitiating the process.")
 		initiateExampleTest(db)
