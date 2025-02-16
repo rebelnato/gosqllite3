@@ -37,6 +37,24 @@ func QueryData(db *sql.DB, username string) (id int, user string, password strin
 	return user1.id, user1.username, user1.passwordFromDb, userPassFromDB
 }
 
+func QueryUserList(db *sql.DB) ([]string, error) {
+	rows, err := db.Query("SELECT username FROM users")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []string
+	for rows.Next() {
+		var username string
+		if err := rows.Scan(&username); err != nil {
+			return nil, err
+		}
+		users = append(users, username)
+	}
+	return users, nil
+}
+
 func UpdateUsername(db *sql.DB, oldUsername, newUsername string) error {
 	id, _, _, _ := QueryData(db, oldUsername)
 	_, err := db.Exec("UPDATE users SET username = ? WHERE id = ?", newUsername, id)
@@ -51,7 +69,7 @@ func UpdatePassword(db *sql.DB, username, newPassword string) error {
 func DeleteUser(db *sql.DB, username, password string) error {
 	_, usernameFromDb, passwordFromDb, err := QueryData(db, username)
 	if err != nil {
-		fmt.Println("Failed to fetch user data from db due to error message %q", err)
+		fmt.Printf("Failed to fetch user data from db due to error message %q", err)
 		// fmt.Printf("Reinitiating the example test flow due to failure while fetching the user data .")
 		return err
 	} else {

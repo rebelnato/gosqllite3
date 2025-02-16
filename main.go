@@ -48,6 +48,7 @@ func main() {
 	// Will call the examples function which will initiate terminal level interactive CRUD examples testing
 	examples(db)
 
+	// crud.QueryUserList(db)
 	// Print parsed values
 	// fmt.Println("Database path:", dbConfig.DatabaseConfig.DbPath)
 	// fmt.Println("Database name:", dbConfig.DatabaseConfig.DbName)

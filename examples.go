@@ -21,6 +21,7 @@ func examples(db *sql.DB) {
 		return
 	} else {
 		initiateExampleTest(db)
+		return
 	}
 }
 
@@ -30,21 +31,45 @@ func initiateExampleTest(db *sql.DB) {
 	fmt.Scanln(&exampleInputOption)
 	switch exampleInputOption {
 	case "read":
+		var readType string
 		fmt.Println("Starting user data fetch example")
-		fmt.Println("Please provide username of the user to perform search")
-		fmt.Print("User name : ")
-		fmt.Scanln(&inputUserName)
-		id, username, passwordFromDb, err := crud.QueryData(db, inputUserName)
-		if err != nil {
-			fmt.Printf("Failed to fetch data from db due to error message :%q\n", err)
+		fmt.Printf("What would you like to fetch from db ? (alluserslist/singleuserdata) \n> ")
+		fmt.Scanln(&readType)
+		if readType == "alluserslist" {
+			fmt.Println("Starting process to fetch all available users list")
+			users, err := crud.QueryUserList(db)
+			if err != nil {
+				fmt.Printf("Failed to fetch data from db due to error message :%q\n", err)
+				initiateExampleTest(db)
+				return
+			} else {
+				fmt.Printf("List of users from db is : %q \n\n", users)
+				initiateExampleTest(db)
+				return
+			}
+		} else if readType == "singleuserdata" {
+			fmt.Println("Please provide username of the user to perform search")
+			fmt.Print("User name : ")
+			fmt.Scanln(&inputUserName)
+			id, username, passwordFromDb, err := crud.QueryData(db, inputUserName)
+			if err != nil {
+				fmt.Printf("Failed to fetch data from db due to error message :%q\n", err)
+				fmt.Println("Reinitiating the example test flow as the provided user is not found")
+				initiateExampleTest(db)
+			} else {
+				fmt.Println("Fetched user data is as follows :")
+				fmt.Printf("User name : %q\nIndex ID : %d\nUser password : %q", username, id, passwordFromDb)
+			}
+		} else {
+			fmt.Println("Invalid input , please type exact command.")
 			fmt.Println("Reinitiating the example test flow as the provided user is not found")
 			initiateExampleTest(db)
-		} else {
-			fmt.Println("Fetched user data is as follows :")
-			fmt.Printf("User name : %q\nIndex ID : %d\nUser password : %q", username, id, passwordFromDb)
+			return
 		}
+
 		fmt.Println("") // Just adding an extra blank line for better clarity in terminal output
 		initiateExampleTest(db)
+		return
 	case "insert":
 		fmt.Println("Starting user data insertion example")
 		fmt.Println("Please provide user name and password in same flow")
@@ -57,6 +82,7 @@ func initiateExampleTest(db *sql.DB) {
 			return
 		}
 		inputPassword = string(pass)
+
 		insertStatus := crud.InsertData(db, inputUserName, inputPassword)
 		if insertStatus != nil {
 			fmt.Printf("\nFailed to insert with error : %q", insertStatus)
@@ -65,6 +91,7 @@ func initiateExampleTest(db *sql.DB) {
 		}
 		fmt.Println("") // Just adding an extra blank line for better clarity in terminal output
 		initiateExampleTest(db)
+		return
 	case "update":
 		var option, newUsername, newPassword string
 		var updateStatus error
@@ -95,6 +122,7 @@ func initiateExampleTest(db *sql.DB) {
 			fmt.Printf("Failed to fetch data from db due to error message :%q\n", updateStatus)
 			fmt.Println("Reinitiating the example test flow as the provided user is not found")
 			initiateExampleTest(db)
+			return
 		} else {
 			switch option {
 			case "username":
@@ -104,10 +132,12 @@ func initiateExampleTest(db *sql.DB) {
 			default:
 				fmt.Println("Invalid option entered, reinitiating the example test flow.")
 				initiateExampleTest(db)
+				return
 			}
 		}
 		fmt.Println("") // Just adding an extra blank line for better clarity in terminal output
 		initiateExampleTest(db)
+		return
 
 	case "delete":
 		var confirmation string
@@ -131,19 +161,23 @@ func initiateExampleTest(db *sql.DB) {
 			}
 			fmt.Println("") // Just adding an extra blank line for better clarity in terminal output
 			initiateExampleTest(db)
+			return
 		} else if confirmation == "no" {
 			fmt.Printf("User denied deletion confimration, restarting the example test flow\n")
 			initiateExampleTest(db)
+			return
 		} else {
 			fmt.Printf("Invalid input provided by user, restarting the example test flow\n")
 			initiateExampleTest(db)
+			return
 		}
 
 	case "exit":
 		fmt.Println("Exiting script based on user input")
-		break
+		return
 	default:
 		fmt.Println("Provided input is invalid reinitiating the process.")
 		initiateExampleTest(db)
+		return
 	}
 }
