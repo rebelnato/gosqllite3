@@ -1,4 +1,4 @@
-package main
+package gosqlite3
 
 import (
 	"fmt"
@@ -23,7 +23,7 @@ type Config struct {
 
 var dbConfig Config
 
-func initiateFlows() {
+func InitiateFlows() {
 	data, err := os.ReadFile("./db/config/config.yml")
 	if err != nil {
 		fmt.Println("Error reading YAML file:", err)
