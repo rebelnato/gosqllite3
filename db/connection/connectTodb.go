@@ -30,6 +30,13 @@ func ConnectToSQLiteDB() (*sql.DB, error) {
 	}
 
 	fmt.Println("Connected to SQLite Database!")
-	return db, nil
+
+	_, createTableError := db.Exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, password TEXT);")
+	if createTableError != nil {
+		fmt.Printf("Failed to create users table eventhough it doesn't exists with error message %q", createTableError)
+		return db, createTableError
+	}
+
+	return db, err
 
 }

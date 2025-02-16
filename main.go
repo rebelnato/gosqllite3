@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	// will be used for calling static query functions
+
 	"github.com/rebelnato/gosqllite3/db/connection"
 	"gopkg.in/yaml.v3"
 )
@@ -42,6 +44,9 @@ func main() {
 		return
 	}
 	defer db.Close()
+
+	// Will call the examples function which will initiate terminal level interactive CRUD examples testing
+	examples(db)
 
 	// Print parsed values
 	// fmt.Println("Database path:", dbConfig.DatabaseConfig.DbPath)
