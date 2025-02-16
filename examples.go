@@ -1,4 +1,4 @@
-package main
+package gosqlite3
 
 import (
 	"database/sql"
