@@ -6,7 +6,7 @@ import (
 
 	// will be used for calling static query functions
 
-	"github.com/rebelnato/gosqllite3/db/connection"
+	"github.com/rebelnato/gosqlite3/db/connection"
 	"gopkg.in/yaml.v3"
 )
 

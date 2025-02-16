@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"syscall"
 
-	"github.com/rebelnato/gosqllite3/crud"
+	"github.com/rebelnato/gosqlite3/crud"
 	"golang.org/x/term"
 )
 
