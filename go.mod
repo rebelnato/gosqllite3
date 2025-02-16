@@ -1,4 +1,4 @@
-module github.com/rebelnato/gosqllite3
+module github.com/rebelnato/gosqlite3
 
 go 1.23.2
 
