@@ -1,7 +1,6 @@
 package gosqlite3
 
 import (
-	"database/sql"
 	"fmt"
 	"syscall"
 
@@ -10,7 +9,7 @@ import (
 )
 
 // Below function is responsible for testing teh examples interative via terminal
-func examples(db *sql.DB) {
+func examples() {
 	var userId, selectedOption string
 	fmt.Print("Please provide your name : ")
 	fmt.Scanln(&userId)
@@ -20,12 +19,12 @@ func examples(db *sql.DB) {
 		fmt.Println("Examples test program interupted")
 		return
 	} else {
-		initiateExampleTest(db)
+		initiateExampleTest()
 		return
 	}
 }
 
-func initiateExampleTest(db *sql.DB) {
+func initiateExampleTest() {
 	var exampleInputOption, inputUserName, inputPassword string
 	fmt.Printf("Please select one of the CRUD operations (read,insert,update,delete). Enter exit if you want to exit the testing.\n> ")
 	fmt.Scanln(&exampleInputOption)
@@ -40,11 +39,11 @@ func initiateExampleTest(db *sql.DB) {
 			users, err := crud.QueryUserList()
 			if err != nil {
 				fmt.Printf("Failed to fetch data from db due to error message :%q\n", err)
-				initiateExampleTest(db)
+				initiateExampleTest()
 				return
 			} else {
 				fmt.Printf("List of users from db is : %q \n\n", users)
-				initiateExampleTest(db)
+				initiateExampleTest()
 				return
 			}
 		} else if readType == "singleuserdata" {
@@ -55,7 +54,7 @@ func initiateExampleTest(db *sql.DB) {
 			if err != nil {
 				fmt.Printf("Failed to fetch data from db due to error message :%q\n", err)
 				fmt.Println("Reinitiating the example test flow as the provided user is not found")
-				initiateExampleTest(db)
+				initiateExampleTest()
 			} else {
 				fmt.Println("Fetched user data is as follows :")
 				fmt.Printf("User name : %q\nIndex ID : %d\nUser password : %q", username, id, passwordFromDb)
@@ -63,12 +62,12 @@ func initiateExampleTest(db *sql.DB) {
 		} else {
 			fmt.Println("Invalid input , please type exact command.")
 			fmt.Println("Reinitiating the example test flow as the provided user is not found")
-			initiateExampleTest(db)
+			initiateExampleTest()
 			return
 		}
 
 		fmt.Println("") // Just adding an extra blank line for better clarity in terminal output
-		initiateExampleTest(db)
+		initiateExampleTest()
 		return
 	case "insert":
 		fmt.Println("Starting user data insertion example")
@@ -90,7 +89,7 @@ func initiateExampleTest(db *sql.DB) {
 			fmt.Printf("\nSuccessfully inserted data for user : %q", inputUserName)
 		}
 		fmt.Println("") // Just adding an extra blank line for better clarity in terminal output
-		initiateExampleTest(db)
+		initiateExampleTest()
 		return
 	case "update":
 		var option, newUsername, newPassword string
@@ -121,7 +120,7 @@ func initiateExampleTest(db *sql.DB) {
 		if updateStatus != nil {
 			fmt.Printf("Failed to fetch data from db due to error message :%q\n", updateStatus)
 			fmt.Println("Reinitiating the example test flow as the provided user is not found")
-			initiateExampleTest(db)
+			initiateExampleTest()
 			return
 		} else {
 			switch option {
@@ -131,12 +130,12 @@ func initiateExampleTest(db *sql.DB) {
 				fmt.Printf("Password successfully updated for user %q.", inputUserName)
 			default:
 				fmt.Println("Invalid option entered, reinitiating the example test flow.")
-				initiateExampleTest(db)
+				initiateExampleTest()
 				return
 			}
 		}
 		fmt.Println("") // Just adding an extra blank line for better clarity in terminal output
-		initiateExampleTest(db)
+		initiateExampleTest()
 		return
 
 	case "delete":
@@ -160,15 +159,15 @@ func initiateExampleTest(db *sql.DB) {
 				fmt.Printf("\nFailed to delete user data with error : %q", deleteStatus)
 			}
 			fmt.Println("") // Just adding an extra blank line for better clarity in terminal output
-			initiateExampleTest(db)
+			initiateExampleTest()
 			return
 		} else if confirmation == "no" {
 			fmt.Printf("User denied deletion confimration, restarting the example test flow\n")
-			initiateExampleTest(db)
+			initiateExampleTest()
 			return
 		} else {
 			fmt.Printf("Invalid input provided by user, restarting the example test flow\n")
-			initiateExampleTest(db)
+			initiateExampleTest()
 			return
 		}
 
@@ -177,7 +176,7 @@ func initiateExampleTest(db *sql.DB) {
 		return
 	default:
 		fmt.Println("Provided input is invalid reinitiating the process.")
-		initiateExampleTest(db)
+		initiateExampleTest()
 		return
 	}
 }

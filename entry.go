@@ -46,7 +46,7 @@ func InitiateFlows() {
 	defer db.Close()
 
 	// Will call the examples function which will initiate terminal level interactive CRUD examples testing
-	examples(db)
+	examples()
 
 	// crud.QueryUserList(db)
 	// Print parsed values
