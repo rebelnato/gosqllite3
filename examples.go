@@ -37,7 +37,7 @@ func initiateExampleTest(db *sql.DB) {
 		fmt.Scanln(&readType)
 		if readType == "alluserslist" {
 			fmt.Println("Starting process to fetch all available users list")
-			users, err := crud.QueryUserList(db)
+			users, err := crud.QueryUserList()
 			if err != nil {
 				fmt.Printf("Failed to fetch data from db due to error message :%q\n", err)
 				initiateExampleTest(db)
@@ -51,7 +51,7 @@ func initiateExampleTest(db *sql.DB) {
 			fmt.Println("Please provide username of the user to perform search")
 			fmt.Print("User name : ")
 			fmt.Scanln(&inputUserName)
-			id, username, passwordFromDb, err := crud.QueryData(db, inputUserName)
+			id, username, passwordFromDb, err := crud.QueryData(inputUserName)
 			if err != nil {
 				fmt.Printf("Failed to fetch data from db due to error message :%q\n", err)
 				fmt.Println("Reinitiating the example test flow as the provided user is not found")
@@ -83,7 +83,7 @@ func initiateExampleTest(db *sql.DB) {
 		}
 		inputPassword = string(pass)
 
-		insertStatus := crud.InsertData(db, inputUserName, inputPassword)
+		insertStatus := crud.InsertData(inputUserName, inputPassword)
 		if insertStatus != nil {
 			fmt.Printf("\nFailed to insert with error : %q", insertStatus)
 		} else {
@@ -104,7 +104,7 @@ func initiateExampleTest(db *sql.DB) {
 		if option == "username" {
 			fmt.Printf("Proceeding with username update .\nPlease provide new proposed username : ")
 			fmt.Scanln(&newUsername)
-			tmp := crud.UpdateUsername(db, inputUserName, newUsername)
+			tmp := crud.UpdateUsername(inputUserName, newUsername)
 			updateStatus = tmp
 		} else if option == "password" {
 			fmt.Printf("Proceeding with password update .\nPlease provide new proposed password for username %q : ", inputUserName)
@@ -114,7 +114,7 @@ func initiateExampleTest(db *sql.DB) {
 				return
 			}
 			newPassword = string(pass)
-			tmp := crud.UpdatePassword(db, inputUserName, newPassword)
+			tmp := crud.UpdatePassword(inputUserName, newPassword)
 			updateStatus = tmp
 		}
 
@@ -155,7 +155,7 @@ func initiateExampleTest(db *sql.DB) {
 		fmt.Printf("Please confim whether you want to delete the data associated with user %q ? (yes/no)", inputUserName)
 		fmt.Scanln(&confirmation)
 		if confirmation == "yes" {
-			deleteStatus := crud.DeleteUser(db, inputUserName, inputPassword)
+			deleteStatus := crud.DeleteUser(inputUserName, inputPassword)
 			if deleteStatus != nil {
 				fmt.Printf("\nFailed to delete user data with error : %q", deleteStatus)
 			}

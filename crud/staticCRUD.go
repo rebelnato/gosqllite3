@@ -6,6 +6,7 @@ import (
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/rebelnato/gosqlite3/db/connection"
 )
 
 type UserData struct {
@@ -15,12 +16,16 @@ type UserData struct {
 }
 
 // SQLlite 3 db related functions
-func InsertData(db *sql.DB, username, password string) error {
+func InsertData(username, password string) error {
+	db, _ := connection.ConnectToSQLiteDB()
+	defer db.Close()
 	_, err := db.Exec("INSERT INTO users (username, password) VALUES (?, ?)", username, password)
 	return err
 }
 
-func QueryData(db *sql.DB, username string) (id int, user string, password string, err error) {
+func QueryData(username string) (id int, user string, password string, err error) {
+	db, _ := connection.ConnectToSQLiteDB()
+	defer db.Close()
 
 	// Declaring var to store password temporarly as part of db query task
 	var user1 UserData
@@ -37,7 +42,9 @@ func QueryData(db *sql.DB, username string) (id int, user string, password strin
 	return user1.id, user1.username, user1.passwordFromDb, userPassFromDB
 }
 
-func QueryUserList(db *sql.DB) ([]string, error) {
+func QueryUserList() ([]string, error) {
+	db, _ := connection.ConnectToSQLiteDB()
+	defer db.Close()
 	rows, err := db.Query("SELECT username FROM users")
 	if err != nil {
 		return nil, err
@@ -55,19 +62,25 @@ func QueryUserList(db *sql.DB) ([]string, error) {
 	return users, nil
 }
 
-func UpdateUsername(db *sql.DB, oldUsername, newUsername string) error {
-	id, _, _, _ := QueryData(db, oldUsername)
+func UpdateUsername(oldUsername, newUsername string) error {
+	db, _ := connection.ConnectToSQLiteDB()
+	defer db.Close()
+	id, _, _, _ := QueryData(oldUsername)
 	_, err := db.Exec("UPDATE users SET username = ? WHERE id = ?", newUsername, id)
 	return err
 }
 
-func UpdatePassword(db *sql.DB, username, newPassword string) error {
+func UpdatePassword(username, newPassword string) error {
+	db, _ := connection.ConnectToSQLiteDB()
+	defer db.Close()
 	_, err := db.Exec("UPDATE users SET password = ? WHERE username = ?", newPassword, username)
 	return err
 }
 
-func DeleteUser(db *sql.DB, username, password string) error {
-	_, usernameFromDb, passwordFromDb, err := QueryData(db, username)
+func DeleteUser(username, password string) error {
+	db, _ := connection.ConnectToSQLiteDB()
+	defer db.Close()
+	_, usernameFromDb, passwordFromDb, err := QueryData(username)
 	if err != nil {
 		fmt.Printf("Failed to fetch user data from db due to error message %q", err)
 		// fmt.Printf("Reinitiating the example test flow due to failure while fetching the user data .")
