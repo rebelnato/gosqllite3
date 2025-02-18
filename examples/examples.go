@@ -1,4 +1,4 @@
-package gosqlite3
+package examples
 
 import (
 	"fmt"
@@ -8,8 +8,17 @@ import (
 	"golang.org/x/term"
 )
 
-// Below function is responsible for testing teh examples interative via terminal
-func examples() {
+/*
+ Below function can be called from parent program to initiate interactive examples of CRUD operations
+ How to call ?
+ import the "github.com/rebelnato/examples" package
+ Call the flow like examples.entryExamplesFlow()
+ This function isn't gonna return any value , it will only initiate an interactive loop
+ Loop progression depends on users inputs
+*/
+
+func entryExamplesFlow() {
+
 	var userId, selectedOption string
 	fmt.Print("Please provide your name : ")
 	fmt.Scanln(&userId)
@@ -24,7 +33,17 @@ func examples() {
 	}
 }
 
+/*
+ Below function will be called from within entryExamplesFlow if user wishes to proceed with CRUD examples
+ How to call ? - Gets called automatically based on input provided in entryExamplesFlow function call
+
+ This function isn't gonna return any value , it will only initiate an interactive loop
+ Loop progression depends on users inputs
+ As part of the loop user will receive option to perform read , insert , updaet and delete on available data in db
+*/
+
 func initiateExampleTest() {
+
 	var exampleInputOption, inputUserName, inputPassword string
 	fmt.Printf("Please select one of the CRUD operations (read,insert,update,delete). Enter exit if you want to exit the testing.\n> ")
 	fmt.Scanln(&exampleInputOption)
