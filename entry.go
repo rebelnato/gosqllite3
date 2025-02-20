@@ -2,7 +2,6 @@ package gosqlite3
 
 import (
 	"database/sql"
-	"log"
 	"os"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -53,19 +52,16 @@ var dbConfig Config
 func ReadDbConfig() (*sql.DB, error) {
 	data, err := os.ReadFile("./db/config/config.yml")
 	if err != nil {
-		log.Println("Error reading YAML file:", err)
 		return nil, err
 	}
 
 	err = yaml.Unmarshal(data, &dbConfig)
 	if err != nil {
-		log.Println("Error parsing YAML:", err)
 		return nil, err
 	}
 
 	db, err := ConnectToSQLiteDB(dbConfig.DatabaseConfig.DbName, dbConfig.DatabaseConfig.DbPath)
 	if err != nil {
-		log.Println("Connection to database failed")
 		return nil, err
 	}
 	return db, err
@@ -92,11 +88,8 @@ func ConnectToSQLiteDB(dbName, dbPath string) (*sql.DB, error) {
 		return nil, err
 	}
 
-	log.Println("Connected to SQLite Database!")
-
 	_, createTableError := db.Exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, password TEXT);")
 	if createTableError != nil {
-		log.Printf("Failed to create users table eventhough it doesn't exists with error message %q", createTableError)
 		return db, createTableError
 	}
 
