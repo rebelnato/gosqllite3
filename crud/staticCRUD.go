@@ -2,7 +2,6 @@ package crud
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -26,7 +25,7 @@ type UserData struct {
 func InsertData(username, password string) error {
 	db, dbError := gosqlite3.ReadDbConfig()
 	if dbError != nil {
-		fmt.Println("Failed to read config details , stoping execution now")
+		log.Println("Failed to read config details , stoping execution now")
 		return dbError
 	}
 	defer db.Close()
@@ -46,7 +45,7 @@ func InsertData(username, password string) error {
 func QueryData(username string) (id int, user string, password string, err error) {
 	db, dbError := gosqlite3.ReadDbConfig()
 	if dbError != nil {
-		fmt.Println("Failed to read config details , stoping execution now")
+		log.Println("Failed to read config details , stoping execution now")
 		return 0, "", "", dbError
 	}
 	defer db.Close()
@@ -74,7 +73,7 @@ Returns list of users available in "users" table and error based on execution st
 func QueryUserList() ([]string, error) {
 	db, dbError := gosqlite3.ReadDbConfig()
 	if dbError != nil {
-		fmt.Println("Failed to read config details , stoping execution now")
+		log.Println("Failed to read config details , stoping execution now")
 		return nil, dbError
 	}
 	defer db.Close()
@@ -108,7 +107,7 @@ func QueryUserList() ([]string, error) {
 func UpdateUsername(oldUsername, newUsername string) error {
 	db, dbError := gosqlite3.ReadDbConfig()
 	if dbError != nil {
-		fmt.Println("Failed to read config details , stoping execution now")
+		log.Println("Failed to read config details , stoping execution now")
 		return dbError
 	}
 	defer db.Close()
@@ -129,7 +128,7 @@ func UpdateUsername(oldUsername, newUsername string) error {
 func UpdatePassword(username, newPassword string) error {
 	db, dbError := gosqlite3.ReadDbConfig()
 	if dbError != nil {
-		fmt.Println("Failed to read config details , stoping execution now")
+		log.Println("Failed to read config details , stoping execution now")
 		return dbError
 	}
 	defer db.Close()
@@ -149,24 +148,24 @@ Returns error based on function execution status
 func DeleteUser(username, password string) error {
 	db, dbError := gosqlite3.ReadDbConfig()
 	if dbError != nil {
-		fmt.Println("Failed to read config details , stoping execution now")
+		log.Println("Failed to read config details , stoping execution now")
 		return dbError
 	}
 	defer db.Close()
 	_, usernameFromDb, passwordFromDb, err := QueryData(username)
 	if err != nil {
-		fmt.Printf("Failed to fetch user data from db due to error message %q", err)
+		log.Printf("Failed to fetch user data from db due to error message %q", err)
 		return err
 	} else {
 		if username == usernameFromDb && password == passwordFromDb {
 			_, err := db.Exec("DELETE FROM users where username = ?", username)
 			if err != nil {
-				fmt.Printf("Failed to delete row associated with user %q due to error message %q", username, err)
+				log.Printf("Failed to delete row associated with user %q due to error message %q", username, err)
 				return err
 			}
-			fmt.Printf("Successfully deleted entry for user %q", username)
+			log.Printf("Successfully deleted entry for user %q", username)
 		} else {
-			fmt.Printf("\nProvided credentials doesn't match available credential in db")
+			log.Printf("\nProvided credentials doesn't match available credential in db")
 		}
 	}
 	return err
